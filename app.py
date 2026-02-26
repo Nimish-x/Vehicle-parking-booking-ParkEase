@@ -10,7 +10,9 @@ from flask_cors import CORS
 from datetime import datetime
 from backend.mail import send_mail
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='')
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}}, 
@@ -18,11 +20,11 @@ CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}},
 
 api = Api(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vehicle_parking.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///vehicle_parking.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECURITY_PASSWORD_SALT'] = 'your_salt'
-app.config['SECRET_KEY'] = 'my_secret_key'
-app.config['SECURITY_PASSWORD_HASH'] = 'argon2'
+app.config['SECURITY_PASSWORD_SALT'] = os.environ.get('SECURITY_PASSWORD_SALT', 'your_salt')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'my_secret_key')
+app.config['SECURITY_PASSWORD_HASH'] = os.environ.get('SECURITY_PASSWORD_HASH', 'argon2')
 app.config['SECURITY_RECOVERABLE'] = True
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_CONFIRMABLE'] = False
